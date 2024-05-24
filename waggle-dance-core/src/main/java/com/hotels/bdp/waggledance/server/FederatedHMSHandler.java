@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2016-2023 Expedia, Inc.
+ * Copyright (C) 2016-2024 Expedia, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -245,16 +245,19 @@ class FederatedHMSHandler extends FacebookBase implements CloseableIHMSHandler {
   private final NotifyingFederationService notifyingFederationService;
   private final WaggleDanceConfiguration waggleDanceConfiguration;
   private Configuration conf;
+  private SaslServerWrapper saslServerWrapper;
 
   FederatedHMSHandler(
       MappingEventListener databaseMappingService,
       NotifyingFederationService notifyingFederationService,
-      WaggleDanceConfiguration waggleDanceConfiguration) {
+      WaggleDanceConfiguration waggleDanceConfiguration,
+      SaslServerWrapper saslServerWrapper) {
     super("waggle-dance-handler");
     this.databaseMappingService = databaseMappingService;
     this.notifyingFederationService = notifyingFederationService;
     this.waggleDanceConfiguration = waggleDanceConfiguration;
     this.notifyingFederationService.subscribe(databaseMappingService);
+    this.saslServerWrapper= saslServerWrapper;
   }
 
   private ThriftHiveMetastore.Iface getPrimaryClient() throws TException {
@@ -1369,19 +1372,48 @@ class FederatedHMSHandler extends FacebookBase implements CloseableIHMSHandler {
   @Loggable(value = Loggable.DEBUG, skipResult = true, name = INVOCATION_LOG_NAME)
   public String get_delegation_token(String token_owner, String renewer_kerberos_principal_name)
       throws MetaException, TException {
-    return getPrimaryClient().get_delegation_token(token_owner, renewer_kerberos_principal_name);
+    try {
+      return saslServerWrapper.getDelegationTokenManager()
+          .getDelegationToken(token_owner, renewer_kerberos_principal_name,
+              saslServerWrapper.getIPAddress());
+    } catch (IOException | InterruptedException e) {
+      throw new MetaException(e.getMessage());
+    }
   }
 
   @Override
   @Loggable(value = Loggable.DEBUG, skipResult = true, name = INVOCATION_LOG_NAME)
   public long renew_delegation_token(String token_str_form) throws MetaException, TException {
-    return getPrimaryClient().renew_delegation_token(token_str_form);
+    try {
+      return saslServerWrapper.getDelegationTokenManager()
+          .renewDelegationToken(token_str_form);
+    } catch (IOException e) {
+      throw new MetaException(e.getMessage());
+    } catch (Exception e) {
+      throw newMetaException(e);
+    }
   }
 
   @Override
   @Loggable(value = Loggable.DEBUG, skipResult = true, name = INVOCATION_LOG_NAME)
   public void cancel_delegation_token(String token_str_form) throws MetaException, TException {
-    getPrimaryClient().cancel_delegation_token(token_str_form);
+    try {
+      saslServerWrapper.getDelegationTokenManager()
+          .cancelDelegationToken(token_str_form);
+    } catch (IOException e) {
+      throw new MetaException(e.getMessage());
+    } catch (Exception e) {
+      throw newMetaException(e);
+    }
+  }
+
+  private static MetaException newMetaException(Exception e) {
+    if (e instanceof MetaException) {
+      return (MetaException)e;
+    }
+    MetaException me = new MetaException(e.toString());
+    me.initCause(e);
+    return me;
   }
 
   @Override
