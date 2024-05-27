@@ -51,15 +51,17 @@ public abstract class AbstractMetaStore {
   private List<String> writableDatabaseWhitelist;
   private List<String> mappedDatabases;
   private @Valid List<MappedTables> mappedTables;
-  private Map<String, String> databaseNameMapping = Collections.emptyMap();
+  private transient Map<String, String> databaseNameMapping = Collections.emptyMap();
   private @NotBlank String name;
   private @NotBlank String remoteMetaStoreUris;
   private @Valid MetastoreTunnel metastoreTunnel;
   private @NotNull AccessControlType accessControlType = AccessControlType.READ_ONLY;
   private transient @JsonProperty @NotNull MetaStoreStatus status = MetaStoreStatus.UNKNOWN;
   private long latency = 0;
-  private transient @JsonIgnore HashBiMap<String, String> databaseNameBiMapping = HashBiMap.create();
+  private @JsonIgnore HashBiMap<String, String> databaseNameBiMapping = HashBiMap.create();
   private boolean impersonationEnabled;
+  private Map<String, String> configurationProperties = Collections.emptyMap();
+
   public AbstractMetaStore(String name, String remoteMetaStoreUris, AccessControlType accessControlType) {
     this.name = name;
     this.remoteMetaStoreUris = remoteMetaStoreUris;
@@ -199,6 +201,15 @@ public abstract class AbstractMetaStore {
   @Transient
   public HashBiMap<String, String> getDatabaseNameBiMapping() {
     return databaseNameBiMapping;
+  }
+
+  public Map<String, String> getConfigurationProperties() {
+    return configurationProperties;
+  }
+
+  public void setConfigurationProperties(
+          Map<String, String> configurationProperties) {
+    this.configurationProperties = configurationProperties;
   }
 
   @Transient
