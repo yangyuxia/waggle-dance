@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
 import static java.lang.String.format;
 @Slf4j
 public class PathConversionConfiguration {
-    private static final String PATH_REPLACEMENT_PREFIX = "hive.metastore.hooks.path.replacement";
+    private static final String PATH_REPLACEMENT_PREFIX = "waggledance.hook.path.replacement";
     public static final String PATH_REPLACEMENT_ENABLED = format("%s.enabled", PATH_REPLACEMENT_PREFIX);
     public static final String PATH_REPLACEMENT_REGEX = format("%s.regex", PATH_REPLACEMENT_PREFIX);
     public static final String PATH_REPLACEMENT_VALUES = format("%s.value", PATH_REPLACEMENT_PREFIX);

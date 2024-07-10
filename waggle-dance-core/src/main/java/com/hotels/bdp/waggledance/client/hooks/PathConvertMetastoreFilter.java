@@ -9,11 +9,11 @@ import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
-public class PathConverMetastoreFilter implements MetaStoreFilterHook {
-    private final static Logger log = LoggerFactory.getLogger(PathConverMetastoreFilter.class);
+public class PathConvertMetastoreFilter implements MetaStoreFilterHook {
+    private final static Logger log = LoggerFactory.getLogger(PathConvertMetastoreFilter.class);
     private final PathConverter converter;
 
-    public PathConverMetastoreFilter(HiveConf conf) {
+    public PathConvertMetastoreFilter(HiveConf conf) {
         converter = new PathConverter(conf);
     }
 
