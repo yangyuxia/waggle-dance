@@ -21,11 +21,11 @@ PathConvertMetastoreFilter是一个实现了hive 3.X MetaStoreFilterHook接口�
 | configuration-properties.waggledance.hook.path.replacement.enabled | true or false,是否启用路径转换钩子，默认为false。                                                      | false |
  
 ### 配置路径转换规则：可配置多组
-| Property                                      | Description                                                                            | Default                     |
-|-----------------------------------------------|----------------------------------------------------------------------------------------|-----------------------------|
-| configuration-properties.waggledance.hook.path.replacement.regex.<ruleName> | Defined regex patterns to check for replacement. Requires matching value.              | [] |
-| configuration-properties.waggledance.hook.path.replacement.value.<ruleName> | Defined value patterns to check for replacement. Requires matching regex.              | [] |
-| configuration-properties.waggledance.hook.path.replacement.capturegroups.<ruleName> | (Optional) Comma delimited list of capture group indexes to use for regex replacement. | [1] |
+| Property                                                                       | Description                                                                            | Default                     |
+|--------------------------------------------------------------------------------|----------------------------------------------------------------------------------------|-----------------------------|
+| configuration-properties.waggledance.hook.path.replacement.regex.$ruleName     | Defined regex patterns to check for replacement. Requires matching value.              | [] |
+| configuration-properties.waggledance.hook.path.replacement.value.$ruleName     | Defined value patterns to check for replacement. Requires matching regex.              | [] |
+| configuration-properties.waggledance.hook.path.replacement.capturegroups.$ruleName | (Optional) Comma delimited list of capture group indexes to use for regex replacement. | [1] |
 
 ## 举例
     primary-meta-store:
