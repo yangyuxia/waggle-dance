@@ -27,15 +27,15 @@ PathConvertMetastoreFilter是一个实现了hive 3.X MetaStoreFilterHook接口�
 | configuration-properties.waggledance.hook.path.replacement.value.<ruleName> | Defined value patterns to check for replacement. Requires matching regex.              | [] |
 | configuration-properties.waggledance.hook.path.replacement.capturegroups.<ruleName> | (Optional) Comma delimited list of capture group indexes to use for regex replacement. | [1] |
 
-## 举例：
-primary-meta-store:
-  name: dp6
-  database-prefix: ''
-  remote-meta-store-uris: thrift://host-hms:9083
-  access-control-type: READ_AND_WRITE_AND_CREATE
-  hive-metastore-filter-hook: com.hotels.bdp.waggledance.client.hooks.PathConvertMetastoreFilter
-  configuration-properties:
-    waggledance.hook.path.replacement.enabled: false
-    waggledance.hook.path.replacement.regex.rbf: ^(hdfs://sharecluster/)(?:.*)
-    waggledance.hook.path.replacement.capturegroups.rbf: 1
-    waggledance.hook.path.replacement.value.rbf: hdfs://dp6/
+## 举例
+    primary-meta-store:
+      name: dp6
+      database-prefix: ''
+      remote-meta-store-uris: thrift://host-hms:9083
+      access-control-type: READ_AND_WRITE_AND_CREATE
+      hive-metastore-filter-hook: com.hotels.bdp.waggledance.client.hooks.PathConvertMetastoreFilter
+      configuration-properties:
+        waggledance.hook.path.replacement.enabled: false
+        waggledance.hook.path.replacement.regex.rbf: ^(hdfs://sharecluster/)(?:.*)
+        waggledance.hook.path.replacement.capturegroups.rbf: 1
+        waggledance.hook.path.replacement.value.rbf: hdfs://dp6/
